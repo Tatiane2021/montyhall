@@ -1,85 +1,88 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <div class="app">
+        <h1>Problema de Monty Hall</h1>
+        <div class="form">
+          <div v-if="!started">
+            <label for="portsAmount">Quantas portas? </label>
+            <input type="text" id="portsAmount" size="3"
+                  v-model.number="portsAmount">
+          </div>
+          <div v-if="!started">
+            <label for="selectedPort">Qual porta é premiada ? </label>
+            <input type="text" id="selectedPort" size="3"
+                v-model.number="selectedPort">
+          </div>
+          <button v-if="!started" @click="started = true">Iniciar</button>
+          <button v-if="started" @click="started = false">Reiniciar</button>
+          </div>
+          <div class="doors" v-if="started">
+            <div v-for="i in portsAmount" :key="i">
+              <Door :hasGift="i == selectedPort" :number="i" />
+            </div>
+          </div>
+        </div> 
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<script>
+import Door from './components/Door.vue'
+
+export default {
+    name: 'App',
+    components: { Door },
+    data: function() {
+      return {
+        started: false,
+        portsAmount: 3,
+        selectedPort: null
+      }
+    }
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+</script>
+
+<style>
+*{
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
 }
 
-nav {
+body {
+  color: #FFF;
+  background: linear-gradient(to right, rgb(21, 153, 87), rgb(21, 87, 153));
+}
+
+#app,
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+#app h1 {
+  border: 1px solid #000;
+  background-color: #0004;
+  padding: 20px;
+  margin-bottom: 60px;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.form, .form input, .form button  {
+  margin-bottom: 10px;
+  font-size: 2rem;
 }
 
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.doors {
+  align-self: stretch;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 </style>
